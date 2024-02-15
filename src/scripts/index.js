@@ -14,7 +14,6 @@ const imagePopup = document.querySelector('.popup_type_image');
 
 const formProfile = document.forms['edit-profile'];
 const formCard = document.forms['new-place'];
-
 const profileNameInput = formProfile.elements.name;
 const profileDescriptionInput = formProfile.elements.description;
 const cardNameInput = formCard.elements['place-name'];
@@ -87,6 +86,8 @@ initialCards.forEach(item => {
   cardContainer.append(card);
 });
 
+// обработка открытия модалок
+
 profileEditButton.addEventListener('click', () => {
   setFields();
   openPopup(profilePopup);
@@ -96,7 +97,8 @@ profileAddButton.addEventListener('click', () => {
   openPopup(newCardPopup);
 });
 
-formProfile.addEventListener('submit', handleProfileFormSubmit);
+// обработка сабмитов
 
+formProfile.addEventListener('submit', handleProfileFormSubmit);
 formCard.addEventListener('submit', handleNewCardFormSubmit);
 
