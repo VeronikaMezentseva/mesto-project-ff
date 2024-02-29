@@ -2,6 +2,7 @@ import '../pages/index.css';
 import { initialCards } from './cards';
 import { createCard, deleteCard, makeLiked } from './card';
 import { openPopup, closePopup } from './modal'
+import { enableValidation, clearValidation } from './validation'
 
 const cardContainer = document.querySelector('.places__list');
 
@@ -22,6 +23,7 @@ const cardLinkInput = formCard.elements.link;
 const profileName = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
 
+const popups = document.querySelectorAll('.popup');
 const popupImage = document.querySelector('.popup__image');
 const popupCaption = document.querySelector('.popup__caption');
 
@@ -31,13 +33,27 @@ const closeBtnProfile = profilePopup.querySelector('.popup__close');
 const closeBtnNewCard = newCardPopup.querySelector('.popup__close');
 const closeBtnImage = imagePopup.querySelector('.popup__close');
 
-closeBtnProfile.addEventListener('click', () => closePopup(profilePopup));
-closeBtnNewCard.addEventListener('click', () => closePopup(newCardPopup));
+// валидация 
+
+const formConfig = {
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__error_visible'
+}
+
+closeBtnProfile.addEventListener('click', () => {
+  closePopup(profilePopup);
+});
+closeBtnNewCard.addEventListener('click', () => {
+  closePopup(newCardPopup);
+});
 closeBtnImage.addEventListener('click', () => closePopup(imagePopup));
 
 // плавность закрытия и открытия модалок
 
-const popups = document.querySelectorAll('.popup');
 popups.forEach(item => item.classList.add('popup_is-animated'));
 
 // функции отправки и заполнения полей
@@ -63,6 +79,7 @@ function handleProfileFormSubmit(evt) {
 
   profileName.textContent = name;
   profileDescription.textContent = title;
+  
   closePopup(profilePopup);
 }
 
@@ -91,9 +108,11 @@ initialCards.forEach(item => {
 profileEditButton.addEventListener('click', () => {
   setFields();
   openPopup(profilePopup);
+  clearValidation(profilePopup.querySelector(formConfig.formSelector), formConfig);
 });
 profileAddButton.addEventListener('click', () => {
   formCard.reset();
+  clearValidation(newCardPopup.querySelector(formConfig.formSelector), formConfig);
   openPopup(newCardPopup);
 });
 
@@ -102,3 +121,16 @@ profileAddButton.addEventListener('click', () => {
 formProfile.addEventListener('submit', handleProfileFormSubmit);
 formCard.addEventListener('submit', handleNewCardFormSubmit);
 
+// --------- валидация ------------
+
+// const formConfig = {
+//   formSelector: '.popup__form',
+//   inputSelector: '.popup__input',
+//   submitButtonSelector: '.popup__button',
+//   inactiveButtonClass: 'popup__button_disabled',
+//   inputErrorClass: 'popup__input_type_error',
+//   errorClass: 'popup__error_visible'
+// }
+
+
+enableValidation(formConfig);
