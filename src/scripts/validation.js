@@ -7,33 +7,34 @@
 //   errorClass: 'popup__error_visible'
 // }
 
-function showInputError(formElement, inputElement, errorMessage) {
+function showInputError(formElement, inputElement, errorMessage, formConfig) {
   const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
-  // inputElement.classList.add(errorClass);
   errorElement.textContent = errorMessage;
+  inputElement.classList.add(formConfig.inputErrorClass);
+  errorElement.classList.add(formConfig.errorClass);
 }
 
-function hideInputError(formElement, inputElement) {
+function hideInputError(formElement, inputElement, formConfig) {
   const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
   errorElement.textContent = '';
-  inputElement.setCustomValidity('');
+  inputElement.classList.remove(formConfig.inputErrorClass);
+  errorElement.classList.remove(formConfig.errorClass);
 }
 
 // проверка валидности инпута, показ/скрытие ошибки
 
-function checkInputValidity(formElement, inputElement) {
+function checkInputValidity(formElement, inputElement, formConfig) {
   const errorMessage = inputElement.setCustomValidity(inputElement.dataset.errorMessage);
   if (inputElement.validity.patternMismatch) {
-    showInputError(formElement, inputElement, errorMessage);
+    showInputError(formElement, inputElement, errorMessage, formConfig);
   } else {
     inputElement.setCustomValidity('');
   }
 
   if (!inputElement.validity.valid) {
-    showInputError(formElement, inputElement, inputElement.validationMessage);
+    showInputError(formElement, inputElement, inputElement.validationMessage, formConfig);
   } else {
-    hideInputError(formElement, inputElement);
-    inputElement.setCustomValidity('');
+    hideInputError(formElement, inputElement, formConfig);
   }
 }
 
@@ -41,7 +42,6 @@ function checkInputValidity(formElement, inputElement) {
 
 function hasInvalidInput(inputList) {
   return inputList.some((inputElement) => {
-    console.log(inputElement.validity);
     return !inputElement.validity.valid;
   });
 }
@@ -49,14 +49,11 @@ function hasInvalidInput(inputList) {
 function toggleButtonState(inputList, buttonElement, formConfig) {
   inputList.forEach(inputElement => inputElement.setCustomValidity('')); // рабочий
   if (hasInvalidInput(inputList)) {
-    inputList.forEach(item => console.log(item.value)); //
     buttonElement.disabled = true;
     buttonElement.classList.add(formConfig.inactiveButtonClass);
   } else {
     buttonElement.disabled = false;
     buttonElement.classList.remove(formConfig.inactiveButtonClass);
-    inputList.forEach(inputElement => inputElement.setCustomValidity(''));
-    // inputElement.setCustomValidity('');
   }
 }
 
@@ -66,7 +63,7 @@ function setEventListeners(formElement, formConfig) {
   toggleButtonState(inputList, buttonElement, formConfig);
   inputList.forEach((inputElement) => {
     inputElement.addEventListener('input', function() {
-      checkInputValidity(formElement, inputElement);
+      checkInputValidity(formElement, inputElement, formConfig);
       toggleButtonState(inputList, buttonElement, formConfig);
     });
   });
@@ -78,11 +75,8 @@ export function clearValidation(formElement, formConfig) {
   toggleButtonState(inputList, buttonElement, formConfig);
   inputList.forEach((inputElement) => {
     inputElement.setCustomValidity(''); //
-    hideInputError(formElement, inputElement);
+    hideInputError(formElement, inputElement, formConfig);
   });
-
-  // нужно ли ремувать еррор класс?
-
 }
 
 export function enableValidation(formConfig) {
