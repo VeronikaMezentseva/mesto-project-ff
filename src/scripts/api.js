@@ -96,9 +96,6 @@ export function putCardLike(config, cardId) {
       } else {
         return Promise.reject(`Ошибка: ${res.status}`);
       }
-    })
-    .catch((err) => {
-      console.log(err);
     });
 }
 
@@ -113,9 +110,6 @@ export function deleteCardLikeRequest(config, cardId) {
     } else {
       return Promise.reject(`Ошибка: ${res.status}`);
     }
-  })
-  .catch((err) => {
-    console.log(err);
   });
 }
 

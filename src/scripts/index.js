@@ -1,9 +1,9 @@
 import '../pages/index.css'; 
-import { createCard, deleteCard, makeLiked } from './card';
+import { createCard, deleteCard, makeLikedHandler } from './card';
 import { openPopup, closePopup } from './modal';
 import { enableValidation, clearValidation } from './validation';
 import { config, getUserData, getUsersCards, updateUserProfile, postNewCard, 
-        sendDeleteCardRequest, putCardLike, deleteCardLikeRequest, updateUserAvatar } from './api';
+        sendDeleteCardRequest, updateUserAvatar } from './api';
 
 const cardContainer = document.querySelector('.places__list');
 
@@ -98,11 +98,10 @@ function handleProfileFormSubmit(evt) {
   const name = profileNameInput.value;
   const title = profileDescriptionInput.value;
 
-  profileName.textContent = name;
-  profileDescription.textContent = title;
-
-  updateUserProfile(config, {name: profileName.textContent, about: profileDescription.textContent})
-    .then(() => {
+  updateUserProfile(config, {name: name, about: title})
+  .then((userData) => {
+      profileName.textContent = userData.name;
+      profileDescription.textContent = userData.about;
       closePopup(profilePopup);
     })
     .finally(() => {
@@ -131,28 +130,7 @@ function handleAvatarFormSubmit(evt) {
     });
 }
 
-function sendLikeRequest(isLiked, config, cardId) {
-  return isLiked? deleteCardLikeRequest(config, cardId) : putCardLike(config, cardId);
-}
-
-function updateLikeAmount(likesCounter, likeAmount) {
-  likesCounter.textContent = likeAmount;
-}
-
-function makeLikedHandler(likeElement, cardId, likesCounter, likeButtonElement) {
-  const hasLike = likeButtonElement.classList.contains('card__like-button_is-active');
-  makeLiked(likeElement);
-  sendLikeRequest(hasLike, config, cardId)
-    .then((data) => {
-      let likeAmount;
-      likeAmount = data.likes.length;
-      updateLikeAmount(likesCounter, likeAmount);
-      return data;
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-}
+let userId;
 
 function handleNewCardFormSubmit(evt) {
   evt.preventDefault();
@@ -225,17 +203,7 @@ formDeleteCard.addEventListener('submit', (evt) => deleteCardHandler(evt, curren
 
 enableValidation(formConfig);
 
-let userId;
-
 const requests = [getUserData(config), getUsersCards(config)];
-
-function hasUserLike(id) {  
-  if (id == userId) {
-    return true;
-  } else {
-    return false;
-  }
-}
 
 Promise.all(requests)
   .then((results) => {
@@ -250,12 +218,6 @@ Promise.all(requests)
     cardsData.forEach((cardData) => {
       const card = createCard(cardData, handleOpenCard, makeLikedHandler, cardData.likes.length, userId, deleteCardPopup, handleOpenDeletePopup);
       cardContainer.append(card);
-      const likeArray = cardData.likes;
-      likeArray.forEach((userLike) => {
-        if (hasUserLike(userLike['_id'])) {
-          makeLiked(card.querySelector('.card__like-button'));
-        }
-      });
     });
   })
   .catch((err) => {
