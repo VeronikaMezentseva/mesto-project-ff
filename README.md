@@ -2,7 +2,7 @@
 
 Репозиторий:
 
-**[https://github.com/VeronikaMezentseva/mesto-project-ff.git]**
+**https://github.com/VeronikaMezentseva/mesto-project-ff.git**
 
 Сайт доступен по ссылке:
 
