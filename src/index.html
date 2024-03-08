@@ -74,7 +74,7 @@
             <span
               class="popup__error-span profile-description-input-error"
             ></span>
-            <button type="submit" class="button popup__button">
+            <button type="submit" class="button popup__button popup__button_disabled" disabled="true">
               Сохранить
             </button>
           </form>
@@ -113,7 +113,7 @@
             <span
               class="popup__error-span new-place-url-input-error"
             ></span>
-            <button type="submit" class="button popup__button">
+            <button type="submit" class="button popup__button popup__button_disabled" disabled="true">
               Сохранить
             </button>
           </form>
@@ -134,10 +134,21 @@
           <form class="popup__form" name="edit-avatar" novalidate>
             <input type="url" name="link" id="avatar-input" class="popup__input popup__input_type_avatar" placeholder="Ссылка на картинку" required pattern="^https:\/\/[a-z\d\-]+\.[^\s]+$" data-error-message="Введите ссылку на картинку">
             <span class="popup__error-span avatar-input-error"></span>
-            <button type="submit" class="button popup__button">
+            <button type="submit" class="button popup__button popup__button_disabled" disabled="true">
               Сохранить
             </button>
           </form>
+      </div>
+    </div>
+    <div class="popup popup_type_delete-card">
+      <div class="popup__content">
+        <button type="button" class="popup__close"></button>
+        <h3 class="popup__title">Вы уверены?</h3>
+        <form class="popup__form" name="delete-card" novalidate>
+          <button type="submit" class="button popup__button">
+            Да
+          </button>
+        </form>
       </div>
     </div>
 

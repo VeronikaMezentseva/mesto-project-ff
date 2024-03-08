@@ -1,21 +1,21 @@
-// Все запросы присвойте переменным и экспортируйте их.
-
-// const config = {
-//   baseUrl: 'https://nomoreparties.co/v1/wff-cohort-8',
-//   headers: {
-//     authorization: '24ef75a7-8795-46f3-b446-da8d3eb6fdc6',
-//     'Content-Type': 'application/json'
-//   }
-// }
-// const profileImage = document.querySelector('.profile__image');
-
+export const config = {
+  baseUrl: 'https://nomoreparties.co/v1/wff-cohort-8',
+  headers: {
+    authorization: '24ef75a7-8795-46f3-b446-da8d3eb6fdc6',
+    'Content-Type': 'application/json'
+  }
+}
 
 export function getUserData(config) {
   return fetch(`${config.baseUrl}/users/me`, {
     headers: config.headers
   })
     .then((res) => {
-      return res.json();
+      if (res.ok) {
+        return res.json();
+      } else {
+        return Promise.reject(`Ошибка: ${res.status}`);
+      }
     })
     .then((data) => {
       return data;
@@ -27,18 +27,16 @@ export function getUsersCards(config) {
     headers: config.headers
   })
   .then((res) => {
-    return res.json();
+    if (res.ok) {
+      return res.json();
+    } else {
+      return Promise.reject(`Ошибка: ${res.status}`);
+    }
   })
   .then((data) => {
-    console.log(data);
     return data;
   });
 }
-
-let promises = [getUserData, getUsersCards];
-Promise.all(promises);
-// Если обновление прошло успешно,
-// в теле ответа от сервера вы получите обновлённые данные пользователя:
 
 export function updateUserProfile(config, userData) {
   return fetch(`${config.baseUrl}/users/me`, {
@@ -47,11 +45,12 @@ export function updateUserProfile(config, userData) {
     body: JSON.stringify(userData)
   })
     .then((res) => {
-      res.json();
-    })
-    // .then((data) => {
-    //   return data;
-    // });
+      if (res.ok) {
+        return res.json();
+      } else {
+        return Promise.reject(`Ошибка: ${res.status}`);
+      }
+    });
 }
 
 export function postNewCard(config, name, link) {
@@ -64,8 +63,12 @@ export function postNewCard(config, name, link) {
     })
   })
     .then((res) => {
-      return res.json();
-    })
+      if (res.ok) {
+        return res.json();
+      } else {
+        return Promise.reject(`Ошибка: ${res.status}`);
+      }
+    });
 }
 
 export function sendDeleteCardRequest(config, cardId) {
@@ -73,6 +76,13 @@ export function sendDeleteCardRequest(config, cardId) {
     headers: config.headers,
     method: 'DELETE'
   })
+    .then((res) => {
+      if (res.ok) {
+        return res.json();
+      } else {
+        return Promise.reject(`Ошибка: ${res.status}`);
+      }
+    });
 }
 
 export function putCardLike(config, cardId) {
@@ -81,8 +91,15 @@ export function putCardLike(config, cardId) {
     method: 'PUT'
   })
     .then((res) => {
-      return res.json();
+      if (res.ok) {
+        return res.json();
+      } else {
+        return Promise.reject(`Ошибка: ${res.status}`);
+      }
     })
+    .catch((err) => {
+      console.log(err);
+    });
 }
 
 export function deleteCardLikeRequest(config, cardId) {
@@ -91,8 +108,15 @@ export function deleteCardLikeRequest(config, cardId) {
     method: 'DELETE'
   })
   .then((res) => {
-    return res.json();
+    if (res.ok) {
+      return res.json();
+    } else {
+      return Promise.reject(`Ошибка: ${res.status}`);
+    }
   })
+  .catch((err) => {
+    console.log(err);
+  });
 }
 
 export function getUpdateCardLikes(config, cardId) {
@@ -101,8 +125,12 @@ export function getUpdateCardLikes(config, cardId) {
     method: 'GET'
   })
   .then((res) => {
-    return res.json();
-  })
+    if (res.ok) {
+      return res.json();
+    } else {
+      return Promise.reject(`Ошибка: ${res.status}`);
+    }
+  });
 }
 
 export function updateUserAvatar(config, avatarLink) {
@@ -114,6 +142,10 @@ export function updateUserAvatar(config, avatarLink) {
     })
   })
   .then((res) => {
-    return res.json();
-  })
+    if (res.ok) {
+      return res.json();
+    } else {
+      return Promise.reject(`Ошибка: ${res.status}`);
+    }
+  });
 }
